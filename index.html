@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>开发者工具箱</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🛠️ 开发者工具箱</h1>
+    <p class="subtitle">常用开发小工具，开箱即用</p>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab active" data-tab="json">JSON 格式化</button>
+    <button class="tab" data-tab="qr">QR 码生成</button>
+    <button class="tab" data-tab="password">密码生成器</button>
+    <button class="tab" data-tab="color">颜色转换</button>
+  </nav>
+
+  <main>
+    <!-- JSON 格式化/压缩 -->
+    <section class="panel active" id="panel-json">
+      <div class="tool-header">
+        <h2>JSON 格式化 / 压缩</h2>
+        <div class="actions">
+          <button onclick="formatJSON()" class="btn btn-primary">格式化</button>
+          <button onclick="compressJSON()" class="btn">压缩</button>
+          <button onclick="copyJSON()" class="btn">复制</button>
+          <button onclick="clearJSON()" class="btn btn-ghost">清空</button>
+        </div>
+      </div>
+      <div class="io-grid">
+        <div class="io-col">
+          <label>输入</label>
+          <textarea id="json-input" placeholder="在此粘贴 JSON 数据..." spellcheck="false"></textarea>
+        </div>
+        <div class="io-col">
+          <label>输出</label>
+          <textarea id="json-output" readonly placeholder="结果将显示在这里..." spellcheck="false"></textarea>
+        </div>
+      </div>
+      <p id="json-error" class="error-msg"></p>
+    </section>
+
+    <!-- QR 码生成器 -->
+    <section class="panel" id="panel-qr">
+      <div class="tool-header">
+        <h2>QR 码生成器</h2>
+      </div>
+      <div class="qr-container">
+        <div class="qr-input-area">
+          <textarea id="qr-text" placeholder="输入文本或网址..." rows="4"></textarea>
+          <div class="qr-options">
+            <label>尺寸:
+              <select id="qr-size">
+                <option value="128">128×128</option>
+                <option value="256" selected>256×256</option>
+                <option value="512">512×512</option>
+              </select>
+            </label>
+            <label>前景色: <input type="color" id="qr-fg" value="#000000"></label>
+            <label>背景色: <input type="color" id="qr-bg" value="#ffffff"></label>
+          </div>
+          <div class="actions">
+            <button onclick="generateQR()" class="btn btn-primary">生成 QR 码</button>
+            <button onclick="downloadQR()" class="btn">下载 PNG</button>
+          </div>
+        </div>
+        <div class="qr-output-area">
+          <div id="qr-result"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 密码生成器 -->
+    <section class="panel" id="panel-password">
+      <div class="tool-header">
+        <h2>密码生成器</h2>
+      </div>
+      <div class="password-container">
+        <div class="password-display">
+          <input type="text" id="password-output" readonly placeholder="点击生成按钮">
+          <button onclick="copyPassword()" class="btn btn-icon" title="复制">📋</button>
+        </div>
+        <div class="password-options">
+          <div class="slider-group">
+            <label>密码长度: <span id="pwd-len-val">16</span></label>
+            <input type="range" id="pwd-length" min="4" max="64" value="16" oninput="document.getElementById('pwd-len-val').textContent=this.value">
+          </div>
+          <div class="checkbox-group">
+            <label><input type="checkbox" id="pwd-upper" checked> 大写字母 (A-Z)</label>
+            <label><input type="checkbox" id="pwd-lower" checked> 小写字母 (a-z)</label>
+            <label><input type="checkbox" id="pwd-number" checked> 数字 (0-9)</label>
+            <label><input type="checkbox" id="pwd-symbol" checked> 特殊字符 (!@#$%)</label>
+          </div>
+          <div class="actions">
+            <button onclick="generatePassword()" class="btn btn-primary">生成密码</button>
+            <button onclick="generatePasswords(10)" class="btn">批量生成 10 个</button>
+          </div>
+        </div>
+        <div id="password-batch" class="password-batch"></div>
+      </div>
+    </section>
+
+    <!-- 颜色转换器 -->
+    <section class="panel" id="panel-color">
+      <div class="tool-header">
+        <h2>颜色转换器</h2>
+      </div>
+      <div class="color-container">
+        <div class="color-preview" id="color-preview" style="background: #6366f1;"></div>
+        <div class="color-inputs">
+          <div class="color-row">
+            <label>HEX</label>
+            <input type="text" id="color-hex" value="#6366f1" placeholder="#RRGGBB" oninput="convertFromHex()">
+          </div>
+          <div class="color-row">
+            <label>RGB</label>
+            <div class="color-triple">
+              <input type="number" id="color-r" min="0" max="255" value="99" oninput="convertFromRGB()">
+              <input type="number" id="color-g" min="0" max="255" value="102" oninput="convertFromRGB()">
+              <input type="number" id="color-b" min="0" max="255" value="241" oninput="convertFromRGB()">
+            </div>
+          </div>
+          <div class="color-row">
+            <label>HSL</label>
+            <div class="color-triple">
+              <input type="number" id="color-h" min="0" max="360" value="239" oninput="convertFromHSL()">
+              <input type="number" id="color-s" min="0" max="100" value="84" oninput="convertFromHSL()">
+              <input type="number" id="color-l" min="0" max="100" value="67" oninput="convertFromHSL()">
+            </div>
+          </div>
+          <div class="color-row">
+            <label>选择</label>
+            <input type="color" id="color-picker" value="#6366f1" oninput="convertFromPicker()">
+          </div>
+        </div>
+        <div class="color-actions">
+          <button onclick="copyColorValue('hex')" class="btn">复制 HEX</button>
+          <button onclick="copyColorValue('rgb')" class="btn">复制 RGB</button>
+          <button onclick="copyColorValue('hsl')" class="btn">复制 HSL</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>开发者工具箱 · 纯前端实现 · 数据不上传</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
