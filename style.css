@@ -454,7 +454,148 @@ footer {
   font-size: 0.78rem;
 }
 
+/* OpenClaw panel */
+.openclaw-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+
+.openclaw-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.oc-group {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.oc-group legend {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--primary-hover);
+  padding: 0 0.4rem;
+}
+
+.oc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.oc-field label {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.oc-field input[type="text"],
+.oc-field input[type="password"],
+.oc-field input[type="number"],
+.oc-field select {
+  padding: 0.45rem 0.6rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 0.82rem;
+}
+
+.oc-field input:focus,
+.oc-field select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.oc-input-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.oc-input-group input {
+  flex: 1;
+  padding: 0.45rem 0.6rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 0.82rem;
+}
+
+.oc-input-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.btn-sm {
+  padding: 0.4rem 0.7rem;
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+.oc-toggle-row {
+  padding: 0.2rem 0;
+}
+
+.oc-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.oc-toggle input[type="checkbox"] {
+  accent-color: var(--primary);
+  width: 16px;
+  height: 16px;
+}
+
+.oc-sub-field {
+  padding-left: 1.5rem;
+}
+
+.openclaw-output {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: sticky;
+  top: 1rem;
+}
+
+.oc-paste-area,
+.oc-output-area {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.oc-paste-area label,
+.oc-output-area label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.oc-paste-area textarea {
+  height: 160px;
+}
+
+.oc-paste-area .btn {
+  align-self: flex-start;
+}
+
+.oc-output-area textarea {
+  height: 260px;
+}
+
 /* Responsive */
+
 @media (max-width: 640px) {
   .io-grid {
     grid-template-columns: 1fr;
@@ -492,5 +633,13 @@ footer {
   .color-triple input[type="number"] {
     width: 100%;
     min-width: 0;
+  }
+
+  .openclaw-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .openclaw-output {
+    position: static;
   }
 }

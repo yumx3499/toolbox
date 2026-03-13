@@ -17,6 +17,7 @@
     <button class="tab" data-tab="qr">QR 码生成</button>
     <button class="tab" data-tab="password">密码生成器</button>
     <button class="tab" data-tab="color">颜色转换</button>
+    <button class="tab" data-tab="openclaw">OpenClaw 配置</button>
   </nav>
 
   <main>
@@ -141,6 +142,136 @@
           <button onclick="copyColorValue('hex')" class="btn">复制 HEX</button>
           <button onclick="copyColorValue('rgb')" class="btn">复制 RGB</button>
           <button onclick="copyColorValue('hsl')" class="btn">复制 HSL</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- OpenClaw 配置生成器 -->
+    <section class="panel" id="panel-openclaw">
+      <div class="tool-header">
+        <h2>OpenClaw 配置生成器</h2>
+        <div class="actions">
+          <button onclick="generateOpenClawConfig()" class="btn btn-primary">生成配置</button>
+          <button onclick="copyOpenClawConfig()" class="btn">复制 JSON</button>
+          <button onclick="downloadOpenClawConfig()" class="btn">下载 openclaw.json</button>
+        </div>
+      </div>
+
+      <div class="openclaw-layout">
+        <!-- 表单区域 -->
+        <div class="openclaw-form">
+
+          <!-- 模型配置 -->
+          <fieldset class="oc-group">
+            <legend>模型配置</legend>
+            <div class="oc-field">
+              <label for="oc-provider">Provider</label>
+              <select id="oc-provider">
+                <option value="openrouter">OpenRouter</option>
+                <option value="google">Google</option>
+                <option value="dashscope">DashScope</option>
+                <option value="custom">自定义</option>
+              </select>
+            </div>
+            <div class="oc-field">
+              <label for="oc-model-id">模型 ID</label>
+              <input type="text" id="oc-model-id" placeholder="anthropic/claude-sonnet-4">
+            </div>
+            <div class="oc-field">
+              <label for="oc-api-key">API Key</label>
+              <input type="password" id="oc-api-key" placeholder="sk-...">
+            </div>
+            <div class="oc-field">
+              <label for="oc-api-base">API Base URL</label>
+              <input type="text" id="oc-api-base" placeholder="留空使用默认值">
+            </div>
+          </fieldset>
+
+          <!-- 网关配置 -->
+          <fieldset class="oc-group">
+            <legend>网关配置</legend>
+            <div class="oc-field">
+              <label for="oc-port">端口号</label>
+              <input type="number" id="oc-port" value="18789" min="1" max="65535">
+            </div>
+            <div class="oc-field">
+              <label for="oc-mode">模式</label>
+              <select id="oc-mode">
+                <option value="local">local</option>
+                <option value="remote">remote</option>
+              </select>
+            </div>
+            <div class="oc-field">
+              <label for="oc-auth-token">Auth Token</label>
+              <div class="oc-input-group">
+                <input type="text" id="oc-auth-token" placeholder="点击生成随机 token">
+                <button onclick="generateAuthToken()" class="btn btn-sm" type="button">生成</button>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- 渠道配置 -->
+          <fieldset class="oc-group">
+            <legend>渠道配置</legend>
+            <div class="oc-toggle-row">
+              <label class="oc-toggle">
+                <input type="checkbox" id="oc-discord-enabled">
+                <span>Discord</span>
+              </label>
+            </div>
+            <div class="oc-field oc-sub-field" id="oc-discord-fields">
+              <label for="oc-discord-token">Discord Token</label>
+              <input type="password" id="oc-discord-token" placeholder="Bot Token">
+            </div>
+            <div class="oc-toggle-row">
+              <label class="oc-toggle">
+                <input type="checkbox" id="oc-telegram-enabled">
+                <span>Telegram</span>
+              </label>
+            </div>
+            <div class="oc-field oc-sub-field" id="oc-telegram-fields">
+              <label for="oc-telegram-token">Bot Token</label>
+              <input type="password" id="oc-telegram-token" placeholder="123456:ABC-DEF...">
+            </div>
+          </fieldset>
+
+          <!-- 工具配置 -->
+          <fieldset class="oc-group">
+            <legend>工具配置</legend>
+            <div class="oc-toggle-row">
+              <label class="oc-toggle">
+                <input type="checkbox" id="oc-websearch-enabled" checked>
+                <span>Web Search</span>
+              </label>
+            </div>
+            <div class="oc-field oc-sub-field" id="oc-websearch-fields">
+              <label for="oc-brave-key">Brave Search API Key</label>
+              <input type="password" id="oc-brave-key" placeholder="BSA...">
+            </div>
+            <div class="oc-toggle-row">
+              <label class="oc-toggle">
+                <input type="checkbox" id="oc-webfetch-enabled" checked>
+                <span>Web Fetch</span>
+              </label>
+            </div>
+            <div class="oc-field oc-sub-field" id="oc-webfetch-fields">
+              <label for="oc-webfetch-maxchars">maxChars</label>
+              <input type="number" id="oc-webfetch-maxchars" value="50000" min="1000">
+            </div>
+          </fieldset>
+        </div>
+
+        <!-- JSON 粘贴 & 输出区域 -->
+        <div class="openclaw-output">
+          <div class="oc-paste-area">
+            <label>粘贴已有 JSON 直接格式化</label>
+            <textarea id="oc-paste-input" placeholder="在此粘贴 openclaw.json 内容..." spellcheck="false"></textarea>
+            <button onclick="parseOpenClawJson()" class="btn">解析并填充表单</button>
+          </div>
+          <div class="oc-output-area">
+            <label>生成的 openclaw.json</label>
+            <textarea id="oc-output" readonly placeholder="点击「生成配置」按钮..." spellcheck="false"></textarea>
+          </div>
         </div>
       </div>
     </section>

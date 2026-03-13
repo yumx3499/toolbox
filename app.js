@@ -291,3 +291,248 @@ function copyColorValue(type) {
   }
   if (text) navigator.clipboard.writeText(text);
 }
+
+// ==========================================
+//  OpenClaw Config Generator
+// ==========================================
+
+const OC_PROVIDER_DEFAULTS = {
+  openrouter: {
+    baseURL: 'https://openrouter.ai/api/v1',
+    model: 'anthropic/claude-sonnet-4'
+  },
+  google: {
+    baseURL: 'https://generativelanguage.googleapis.com/v1beta',
+    model: 'gemini-2.5-pro-preview'
+  },
+  dashscope: {
+    baseURL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+    model: 'qwen-max'
+  },
+  custom: {
+    baseURL: '',
+    model: ''
+  }
+};
+
+// Provider 切换时自动填充默认值
+document.getElementById('oc-provider').addEventListener('change', function () {
+  const defaults = OC_PROVIDER_DEFAULTS[this.value];
+  if (defaults) {
+    document.getElementById('oc-model-id').placeholder = defaults.model || '输入模型 ID';
+    document.getElementById('oc-api-base').placeholder = defaults.baseURL || '输入 API Base URL';
+  }
+});
+
+// 渠道开关联动
+document.getElementById('oc-discord-enabled').addEventListener('change', function () {
+  document.getElementById('oc-discord-fields').style.display = this.checked ? '' : 'none';
+});
+document.getElementById('oc-telegram-enabled').addEventListener('change', function () {
+  document.getElementById('oc-telegram-fields').style.display = this.checked ? '' : 'none';
+});
+document.getElementById('oc-websearch-enabled').addEventListener('change', function () {
+  document.getElementById('oc-websearch-fields').style.display = this.checked ? '' : 'none';
+});
+document.getElementById('oc-webfetch-enabled').addEventListener('change', function () {
+  document.getElementById('oc-webfetch-fields').style.display = this.checked ? '' : 'none';
+});
+
+// 初始化隐藏子字段
+(function initOpenClawFields() {
+  document.getElementById('oc-discord-fields').style.display = 'none';
+  document.getElementById('oc-telegram-fields').style.display = 'none';
+})();
+
+function generateAuthToken() {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const arr = new Uint32Array(32);
+  crypto.getRandomValues(arr);
+  let token = '';
+  for (let i = 0; i < 32; i++) token += chars[arr[i] % chars.length];
+  document.getElementById('oc-auth-token').value = token;
+}
+
+function getOpenClawConfig() {
+  const provider = document.getElementById('oc-provider').value;
+  const modelId = document.getElementById('oc-model-id').value.trim() || OC_PROVIDER_DEFAULTS[provider].model;
+  const apiKey = document.getElementById('oc-api-key').value.trim();
+  let apiBase = document.getElementById('oc-api-base').value.trim();
+  if (!apiBase) apiBase = OC_PROVIDER_DEFAULTS[provider].baseURL;
+
+  const port = parseInt(document.getElementById('oc-port').value) || 18789;
+  const mode = document.getElementById('oc-mode').value;
+  const authToken = document.getElementById('oc-auth-token').value.trim();
+
+  const discordEnabled = document.getElementById('oc-discord-enabled').checked;
+  const discordToken = document.getElementById('oc-discord-token').value.trim();
+  const telegramEnabled = document.getElementById('oc-telegram-enabled').checked;
+  const telegramToken = document.getElementById('oc-telegram-token').value.trim();
+
+  const websearchEnabled = document.getElementById('oc-websearch-enabled').checked;
+  const braveKey = document.getElementById('oc-brave-key').value.trim();
+  const webfetchEnabled = document.getElementById('oc-webfetch-enabled').checked;
+  const webfetchMaxChars = parseInt(document.getElementById('oc-webfetch-maxchars').value) || 50000;
+
+  const config = {
+    models: {
+      default: {
+        provider: provider,
+        model: modelId,
+        apiKey: apiKey,
+        temperature: 0.7,
+        maxTokens: 8192,
+        contextWindow: 200000
+      }
+    },
+    gateway: {
+      port: port,
+      mode: mode,
+      authToken: authToken || undefined
+    },
+    channels: {},
+    tools: {}
+  };
+
+  if (apiBase) config.models.default.baseURL = apiBase;
+
+  if (discordEnabled && discordToken) {
+    config.channels.discord = {
+      enabled: true,
+      token: discordToken
+    };
+  }
+
+  if (telegramEnabled && telegramToken) {
+    config.channels.telegram = {
+      enabled: true,
+      token: telegramToken
+    };
+  }
+
+  if (websearchEnabled) {
+    config.tools.webSearch = {
+      enabled: true,
+      braveApiKey: braveKey || undefined
+    };
+  }
+
+  if (webfetchEnabled) {
+    config.tools.webFetch = {
+      enabled: true,
+      maxChars: webfetchMaxChars
+    };
+  }
+
+  // 清理 undefined
+  return JSON.parse(JSON.stringify(config));
+}
+
+function generateOpenClawConfig() {
+  const config = getOpenClawConfig();
+  const output = document.getElementById('oc-output');
+  output.value = JSON.stringify(config, null, 2);
+}
+
+function copyOpenClawConfig() {
+  const output = document.getElementById('oc-output');
+  if (!output.value) {
+    generateOpenClawConfig();
+  }
+  if (output.value) navigator.clipboard.writeText(output.value);
+}
+
+function downloadOpenClawConfig() {
+  const output = document.getElementById('oc-output');
+  if (!output.value) generateOpenClawConfig();
+  if (!output.value) return;
+  const blob = new Blob([output.value], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'openclaw.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function parseOpenClawJson() {
+  const input = document.getElementById('oc-paste-input').value.trim();
+  if (!input) return;
+
+  let json;
+  try {
+    json = JSON.parse(input);
+  } catch (e) {
+    alert('JSON 解析失败: ' + e.message);
+    return;
+  }
+
+  // 解析模型配置
+  if (json.models && json.models.default) {
+    const m = json.models.default;
+    if (m.provider) {
+      document.getElementById('oc-provider').value = m.provider;
+    }
+    if (m.model) {
+      document.getElementById('oc-model-id').value = m.model;
+    }
+    if (m.apiKey) {
+      document.getElementById('oc-api-key').value = m.apiKey;
+    }
+    if (m.baseURL) {
+      document.getElementById('oc-api-base').value = m.baseURL;
+    }
+  }
+
+  // 解析网关配置
+  if (json.gateway) {
+    if (json.gateway.port) {
+      document.getElementById('oc-port').value = json.gateway.port;
+    }
+    if (json.gateway.mode) {
+      document.getElementById('oc-mode').value = json.gateway.mode;
+    }
+    if (json.gateway.authToken) {
+      document.getElementById('oc-auth-token').value = json.gateway.authToken;
+    }
+  }
+
+  // 解析渠道配置
+  if (json.channels) {
+    if (json.channels.discord) {
+      document.getElementById('oc-discord-enabled').checked = json.channels.discord.enabled !== false;
+      document.getElementById('oc-discord-fields').style.display = json.channels.discord.enabled !== false ? '' : 'none';
+      if (json.channels.discord.token) {
+        document.getElementById('oc-discord-token').value = json.channels.discord.token;
+      }
+    }
+    if (json.channels.telegram) {
+      document.getElementById('oc-telegram-enabled').checked = json.channels.telegram.enabled !== false;
+      document.getElementById('oc-telegram-fields').style.display = json.channels.telegram.enabled !== false ? '' : 'none';
+      if (json.channels.telegram.token) {
+        document.getElementById('oc-telegram-token').value = json.channels.telegram.token;
+      }
+    }
+  }
+
+  // 解析工具配置
+  if (json.tools) {
+    if (json.tools.webSearch) {
+      document.getElementById('oc-websearch-enabled').checked = json.tools.webSearch.enabled !== false;
+      document.getElementById('oc-websearch-fields').style.display = json.tools.webSearch.enabled !== false ? '' : 'none';
+      if (json.tools.webSearch.braveApiKey) {
+        document.getElementById('oc-brave-key').value = json.tools.webSearch.braveApiKey;
+      }
+    }
+    if (json.tools.webFetch) {
+      document.getElementById('oc-webfetch-enabled').checked = json.tools.webFetch.enabled !== false;
+      document.getElementById('oc-webfetch-fields').style.display = json.tools.webFetch.enabled !== false ? '' : 'none';
+      if (json.tools.webFetch.maxChars) {
+        document.getElementById('oc-webfetch-maxchars').value = json.tools.webFetch.maxChars;
+      }
+    }
+  }
+
+  // 同步生成输出
+  generateOpenClawConfig();
+}
