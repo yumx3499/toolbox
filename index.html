@@ -7,26 +7,30 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>🛠️ 开发者工具箱</h1>
-    <p class="subtitle">常用开发小工具，开箱即用</p>
-  </header>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>🛠️ 工具箱</h1>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="sidebar-item active" data-tab="json"><span class="icon">{ }</span><span class="label">JSON</span></button>
+        <button class="sidebar-item" data-tab="qr"><span class="icon">⬛</span><span class="label">QR 码</span></button>
+        <button class="sidebar-item" data-tab="password"><span class="icon">🔑</span><span class="label">密码</span></button>
+        <button class="sidebar-item" data-tab="color"><span class="icon">🎨</span><span class="label">颜色</span></button>
+        <button class="sidebar-item" data-tab="base64"><span class="icon">📝</span><span class="label">Base64</span></button>
+        <button class="sidebar-item" data-tab="timestamp"><span class="icon">⏱️</span><span class="label">时间戳</span></button>
+        <button class="sidebar-item" data-tab="url"><span class="icon">🔗</span><span class="label">URL</span></button>
+        <button class="sidebar-item" data-tab="uuid"><span class="icon">🆔</span><span class="label">UUID</span></button>
+        <button class="sidebar-item" data-tab="hash"><span class="icon">#️⃣</span><span class="label">Hash</span></button>
+        <button class="sidebar-item" data-tab="jwt"><span class="icon">🎫</span><span class="label">JWT</span></button>
+        <button class="sidebar-item" data-tab="openclaw"><span class="icon">🦞</span><span class="label">OpenClaw</span></button>
+      </nav>
+      <div class="sidebar-footer">
+        <span>纯前端 · 数据不上传</span>
+      </div>
+    </aside>
 
-  <nav class="tabs">
-    <button class="tab active" data-tab="json">JSON</button>
-    <button class="tab" data-tab="qr">QR 码</button>
-    <button class="tab" data-tab="password">密码</button>
-    <button class="tab" data-tab="color">颜色</button>
-    <button class="tab" data-tab="base64">Base64</button>
-    <button class="tab" data-tab="timestamp">时间戳</button>
-    <button class="tab" data-tab="url">URL</button>
-    <button class="tab" data-tab="uuid">UUID</button>
-    <button class="tab" data-tab="hash">Hash</button>
-    <button class="tab" data-tab="jwt">JWT</button>
-    <button class="tab" data-tab="openclaw">OpenClaw</button>
-  </nav>
-
-  <main>
+    <main class="main-content">
     <!-- JSON 格式化/压缩 -->
     <section class="panel active" id="panel-json">
       <div class="tool-header">
@@ -465,14 +469,11 @@
         </div>
       </div>
     </section>
-  </main>
+    </main>
+  </div>
 
   <!-- Toast 通知 -->
   <div id="toast" class="toast"></div>
-
-  <footer>
-    <p>开发者工具箱 · 纯前端实现 · 数据不上传</p>
-  </footer>
 
   <script src="qrcode.min.js"></script>
   <script src="app.js"></script>

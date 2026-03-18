@@ -17,14 +17,14 @@ function copyText(id) {
 }
 
 // ==========================================
-//  Tab switching
+//  Sidebar switching
 // ==========================================
-document.querySelectorAll('.tab').forEach(tab => {
-  tab.addEventListener('click', () => {
-    document.querySelector('.tab.active').classList.remove('active');
+document.querySelectorAll('.sidebar-item').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelector('.sidebar-item.active').classList.remove('active');
     document.querySelector('.panel.active').classList.remove('active');
-    tab.classList.add('active');
-    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    item.classList.add('active');
+    document.getElementById('panel-' + item.dataset.tab).classList.add('active');
   });
 });
 
