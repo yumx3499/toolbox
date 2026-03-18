@@ -600,6 +600,20 @@ function decodeToText() {
   }
 }
 
+function decodeMixedString() {
+  const raw = document.getElementById('uni-mixed-input').value;
+  if (!raw) return;
+  try {
+    // 正则匹配 \u 后跟 1~6 位十六进制，转成对应字符
+    const decoded = raw.replace(/\\u([0-9a-fA-F]{1,6})/g, (_, hex) => {
+      return String.fromCodePoint(parseInt(hex, 16));
+    });
+    document.getElementById('uni-mixed-result').value = decoded;
+  } catch (e) {
+    document.getElementById('uni-mixed-result').value = '❌ 解码失败：' + e.message;
+  }
+}
+
 // ==========================================
 //  OpenClaw Config Generator (v2 schema)
 // ==========================================

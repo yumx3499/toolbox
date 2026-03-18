@@ -390,6 +390,18 @@
             <button class="btn" onclick="copyText('uni-ascii-result')">复制</button>
           </div>
         </div>
+        <!-- 混合字符串解码 -->
+        <div class="unicode-section" style="margin-top:1rem">
+          <label>混合字符串解码（明文 + \uXXXX 混排）</label>
+          <div class="unicode-input-row">
+            <input type="text" id="uni-mixed-input" placeholder='输入混合字符串，如 你好\u4e16\u754cworld' style="flex:1">
+            <button onclick="decodeMixedString()" class="btn btn-primary">解码</button>
+          </div>
+          <div class="unicode-result-row">
+            <input type="text" id="uni-mixed-result" readonly placeholder="解码结果（完整明文）...">
+            <button class="btn" onclick="copyText('uni-mixed-result')">复制</button>
+          </div>
+        </div>
         <!-- 编码 → 文本 -->
         <div class="unicode-section" style="margin-top:1rem">
           <label>码点 → 文本</label>
