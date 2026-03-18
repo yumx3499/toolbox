@@ -23,6 +23,7 @@
         <button class="sidebar-item" data-tab="uuid"><span class="icon">🆔</span><span class="label">UUID</span></button>
         <button class="sidebar-item" data-tab="hash"><span class="icon">#️⃣</span><span class="label">Hash</span></button>
         <button class="sidebar-item" data-tab="jwt"><span class="icon">🎫</span><span class="label">JWT</span></button>
+        <button class="sidebar-item" data-tab="unicode"><span class="icon">🔤</span><span class="label">Unicode</span></button>
         <button class="sidebar-item" data-tab="openclaw"><span class="icon">🦞</span><span class="label">OpenClaw</span></button>
       </nav>
       <div class="sidebar-footer">
@@ -333,6 +334,75 @@
         </div>
       </div>
       <p id="jwt-error" class="error-msg"></p>
+    </section>
+
+    <!-- Unicode / ASCII 转换 -->
+    <section class="panel" id="panel-unicode">
+      <div class="tool-header">
+        <h2>Unicode / ASCII 转换</h2>
+      </div>
+      <div class="unicode-container">
+        <!-- 文本 → 编码 -->
+        <div class="unicode-section">
+          <label>文本 → 编码</label>
+          <div class="unicode-input-row">
+            <input type="text" id="uni-text-input" placeholder="输入文本，如 Hello 你好 😊">
+            <button onclick="textToEncoding()" class="btn btn-primary">转换</button>
+          </div>
+        </div>
+        <div class="io-grid" style="margin-top:0.8rem">
+          <div class="io-col">
+            <label>Unicode 码点</label>
+            <textarea id="uni-codepoints" readonly placeholder="U+0048 U+0065 U+006C..." rows="3"></textarea>
+            <button class="btn btn-sm" onclick="copyText('uni-codepoints')" style="margin-top:0.3rem">复制</button>
+          </div>
+          <div class="io-col">
+            <label>HTML 实体</label>
+            <textarea id="uni-html-entities" readonly placeholder="&#72;&#101;&#108;..." rows="3"></textarea>
+            <button class="btn btn-sm" onclick="copyText('uni-html-entities')" style="margin-top:0.3rem">复制</button>
+          </div>
+        </div>
+        <div class="io-grid" style="margin-top:0.8rem">
+          <div class="io-col">
+            <label>UTF-8 十进制</label>
+            <textarea id="uni-utf8-dec" readonly placeholder="72 101 108..." rows="3"></textarea>
+            <button class="btn btn-sm" onclick="copyText('uni-utf8-dec')" style="margin-top:0.3rem">复制</button>
+          </div>
+          <div class="io-col">
+            <label>UTF-8 十六进制</label>
+            <textarea id="uni-utf8-hex" readonly placeholder="48 65 6C..." rows="3"></textarea>
+            <button class="btn btn-sm" onclick="copyText('uni-utf8-hex')" style="margin-top:0.3rem">复制</button>
+          </div>
+        </div>
+        <!-- ASCII 专用 -->
+        <div class="unicode-section" style="margin-top:1rem">
+          <label>ASCII 码 ↔ 字符</label>
+          <div class="unicode-input-row">
+            <input type="text" id="uni-ascii-input" placeholder="输入 ASCII 码，如 72 101 108 108 111（空格分隔）">
+            <select id="uni-ascii-mode">
+              <option value="dec">十进制</option>
+              <option value="hex">十六进制</option>
+            </select>
+            <button onclick="asciiToText()" class="btn btn-primary">解码</button>
+          </div>
+          <div class="unicode-result-row">
+            <input type="text" id="uni-ascii-result" readonly placeholder="解码结果...">
+            <button class="btn" onclick="copyText('uni-ascii-result')">复制</button>
+          </div>
+        </div>
+        <!-- 编码 → 文本 -->
+        <div class="unicode-section" style="margin-top:1rem">
+          <label>码点 → 文本</label>
+          <div class="unicode-input-row">
+            <input type="text" id="uni-decode-input" placeholder="输入码点，如 U+0048 U+0065 或 72 101 108">
+            <button onclick="decodeToText()" class="btn btn-primary">解码</button>
+          </div>
+          <div class="unicode-result-row">
+            <input type="text" id="uni-decode-result" readonly placeholder="解码结果...">
+            <button class="btn" onclick="copyText('uni-decode-result')">复制</button>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- OpenClaw 配置生成器 -->

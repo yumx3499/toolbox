@@ -580,6 +580,69 @@ textarea[readonly] {
   height: 180px;
 }
 
+/* Unicode panel */
+.unicode-container {
+  max-width: 720px;
+}
+.unicode-section {
+  margin-bottom: 0.5rem;
+}
+.unicode-section > label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 0.4rem;
+}
+.unicode-input-row {
+  display: flex;
+  gap: 0.5rem;
+}
+.unicode-input-row input {
+  flex: 1;
+  padding: 0.45rem 0.6rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: "Fira Code", monospace;
+  font-size: 0.85rem;
+}
+.unicode-input-row input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+.unicode-input-row select {
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-size: 0.82rem;
+  padding: 0.3rem 0.5rem;
+}
+.unicode-result-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+.unicode-result-row input {
+  flex: 1;
+  padding: 0.45rem 0.6rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--success);
+  font-family: "Fira Code", monospace;
+  font-size: 0.85rem;
+}
+.unicode-result-row input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+.io-col .btn-sm {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+}
+
 /* OpenClaw field row (inline) */
 .oc-field-row {
   display: flex;

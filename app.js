@@ -559,6 +559,71 @@ function clearJWT() {
 }
 
 // ==========================================
+//  Unicode / ASCII 转换
+// ==========================================
+function textToEncoding() {
+  const text = document.getElementById('uni-text-input').value;
+  if (!text) return;
+
+  // Unicode code points
+  const codepoints = [];
+  const htmlEntities = [];
+  for (const ch of text) {
+    const cp = ch.codePointAt(0);
+    codepoints.push('U+' + cp.toString(16).toUpperCase().padStart(cp > 0xFFFF ? 6 : 4, '0'));
+    htmlEntities.push(cp < 128 ? '&#' + cp + ';' : '&#x' + cp.toString(16) + ';');
+  }
+  document.getElementById('uni-codepoints').value = codepoints.join(' ');
+  document.getElementById('uni-html-entities').value = htmlEntities.join('');
+
+  // UTF-8 bytes
+  const encoder = new TextEncoder();
+  const bytes = encoder.encode(text);
+  document.getElementById('uni-utf8-dec').value = Array.from(bytes).join(' ');
+  document.getElementById('uni-utf8-hex').value = Array.from(bytes).map(b => b.toString(16).toUpperCase().padStart(2, '0')).join(' ');
+}
+
+function asciiToText() {
+  const raw = document.getElementById('uni-ascii-input').value.trim();
+  const mode = document.getElementById('uni-ascii-mode').value;
+  if (!raw) return;
+  try {
+    const codes = raw.split(/[\s,]+/).map(s => parseInt(s, mode === 'hex' ? 16 : 10));
+    if (codes.some(isNaN)) throw new Error('包含无效数字');
+    const text = String.fromCharCode(...codes);
+    document.getElementById('uni-ascii-result').value = text;
+  } catch (e) {
+    document.getElementById('uni-ascii-result').value = '❌ ' + e.message;
+  }
+}
+
+function decodeToText() {
+  const raw = document.getElementById('uni-decode-input').value.trim();
+  if (!raw) return;
+  try {
+    // Support U+XXXX format and plain decimal
+    let chars;
+    if (raw.includes('U+') || raw.includes('u+')) {
+      chars = raw.split(/[\s,]+/).filter(Boolean).map(part => {
+        const hex = part.replace(/^[uU]\+/, '');
+        const cp = parseInt(hex, 16);
+        if (isNaN(cp)) throw new Error('无效码点: ' + part);
+        return String.fromCodePoint(cp);
+      });
+    } else {
+      chars = raw.split(/[\s,]+/).map(s => {
+        const n = parseInt(s, 10);
+        if (isNaN(n)) throw new Error('无效数字: ' + s);
+        return String.fromCodePoint(n);
+      });
+    }
+    document.getElementById('uni-decode-result').value = chars.join('');
+  } catch (e) {
+    document.getElementById('uni-decode-result').value = '❌ ' + e.message;
+  }
+}
+
+// ==========================================
 //  OpenClaw Config Generator (v2 schema)
 // ==========================================
 const OC_PROVIDER_DEFAULTS = {
