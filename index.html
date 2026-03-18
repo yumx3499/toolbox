@@ -13,11 +13,17 @@
   </header>
 
   <nav class="tabs">
-    <button class="tab active" data-tab="json">JSON 格式化</button>
-    <button class="tab" data-tab="qr">QR 码生成</button>
-    <button class="tab" data-tab="password">密码生成器</button>
-    <button class="tab" data-tab="color">颜色转换</button>
-    <button class="tab" data-tab="openclaw">OpenClaw 配置</button>
+    <button class="tab active" data-tab="json">JSON</button>
+    <button class="tab" data-tab="qr">QR 码</button>
+    <button class="tab" data-tab="password">密码</button>
+    <button class="tab" data-tab="color">颜色</button>
+    <button class="tab" data-tab="base64">Base64</button>
+    <button class="tab" data-tab="timestamp">时间戳</button>
+    <button class="tab" data-tab="url">URL</button>
+    <button class="tab" data-tab="uuid">UUID</button>
+    <button class="tab" data-tab="hash">Hash</button>
+    <button class="tab" data-tab="jwt">JWT</button>
+    <button class="tab" data-tab="openclaw">OpenClaw</button>
   </nav>
 
   <main>
@@ -28,7 +34,7 @@
         <div class="actions">
           <button onclick="formatJSON()" class="btn btn-primary">格式化</button>
           <button onclick="compressJSON()" class="btn">压缩</button>
-          <button onclick="copyJSON()" class="btn">复制</button>
+          <button onclick="copyText('json-output')" class="btn">复制</button>
           <button onclick="clearJSON()" class="btn btn-ghost">清空</button>
         </div>
       </div>
@@ -83,7 +89,7 @@
       <div class="password-container">
         <div class="password-display">
           <input type="text" id="password-output" readonly placeholder="点击生成按钮">
-          <button onclick="copyPassword()" class="btn btn-icon" title="复制">📋</button>
+          <button onclick="copyText('password-output')" class="btn btn-icon" title="复制">📋</button>
         </div>
         <div class="password-options">
           <div class="slider-group">
@@ -146,13 +152,192 @@
       </div>
     </section>
 
+    <!-- Base64 编解码 -->
+    <section class="panel" id="panel-base64">
+      <div class="tool-header">
+        <h2>Base64 编解码</h2>
+        <div class="actions">
+          <button onclick="base64Encode()" class="btn btn-primary">编码</button>
+          <button onclick="base64Decode()" class="btn">解码</button>
+          <button onclick="copyText('base64-output')" class="btn">复制</button>
+          <button onclick="swapBase64()" class="btn btn-ghost">⇄ 交换</button>
+        </div>
+      </div>
+      <div class="io-grid">
+        <div class="io-col">
+          <label>明文 / Base64</label>
+          <textarea id="base64-input" placeholder="在此输入内容..." spellcheck="false"></textarea>
+        </div>
+        <div class="io-col">
+          <label>Base64 / 明文</label>
+          <textarea id="base64-output" readonly placeholder="结果将显示在这里..." spellcheck="false"></textarea>
+        </div>
+      </div>
+      <p id="base64-error" class="error-msg"></p>
+    </section>
+
+    <!-- 时间戳转换 -->
+    <section class="panel" id="panel-timestamp">
+      <div class="tool-header">
+        <h2>时间戳 ↔ 日期</h2>
+        <div class="actions">
+          <button onclick="tsNow()" class="btn btn-primary">取当前时间</button>
+          <button onclick="tsFromInput()" class="btn">转换</button>
+        </div>
+      </div>
+      <div class="ts-container">
+        <div class="ts-row">
+          <label>时间戳 (秒)</label>
+          <div class="ts-input-group">
+            <input type="number" id="ts-seconds" placeholder="1742284800">
+            <button onclick="copyText('ts-seconds')" class="btn">复制</button>
+          </div>
+        </div>
+        <div class="ts-row">
+          <label>时间戳 (毫秒)</label>
+          <div class="ts-input-group">
+            <input type="number" id="ts-millis" placeholder="1742284800000">
+            <button onclick="copyText('ts-millis')" class="btn">复制</button>
+          </div>
+        </div>
+        <div class="ts-row">
+          <label>UTC</label>
+          <div class="ts-input-group">
+            <input type="text" id="ts-utc" readonly>
+          </div>
+        </div>
+        <div class="ts-row">
+          <label>北京时间</label>
+          <div class="ts-input-group">
+            <input type="text" id="ts-cst" readonly>
+          </div>
+        </div>
+        <div class="ts-row">
+          <label>ISO 8601</label>
+          <div class="ts-input-group">
+            <input type="text" id="ts-iso" readonly>
+            <button onclick="copyText('ts-iso')" class="btn">复制</button>
+          </div>
+        </div>
+        <div class="ts-row">
+          <label>手动输入日期</label>
+          <div class="ts-input-group">
+            <input type="text" id="ts-manual" placeholder="2026-03-18 10:00:00">
+            <button onclick="tsFromManual()" class="btn btn-primary">转换</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- URL 编解码 -->
+    <section class="panel" id="panel-url">
+      <div class="tool-header">
+        <h2>URL 编解码</h2>
+        <div class="actions">
+          <button onclick="urlEncode()" class="btn btn-primary">编码</button>
+          <button onclick="urlDecode()" class="btn">解码</button>
+          <button onclick="copyText('url-output')" class="btn">复制</button>
+          <button onclick="swapUrl()" class="btn btn-ghost">⇄ 交换</button>
+        </div>
+      </div>
+      <div class="io-grid">
+        <div class="io-col">
+          <label>明文</label>
+          <textarea id="url-input" placeholder="在此输入 URL 或文本..." spellcheck="false"></textarea>
+        </div>
+        <div class="io-col">
+          <label>编码结果</label>
+          <textarea id="url-output" readonly placeholder="结果将显示在这里..." spellcheck="false"></textarea>
+        </div>
+      </div>
+      <p id="url-error" class="error-msg"></p>
+    </section>
+
+    <!-- UUID 生成器 -->
+    <section class="panel" id="panel-uuid">
+      <div class="tool-header">
+        <h2>UUID 生成器</h2>
+        <div class="actions">
+          <button onclick="generateUUID()" class="btn btn-primary">生成 UUID v4</button>
+          <button onclick="generateUUIDs(10)" class="btn">批量生成 10 个</button>
+        </div>
+      </div>
+      <div class="uuid-container">
+        <div class="password-display">
+          <input type="text" id="uuid-output" readonly placeholder="点击生成按钮">
+          <button onclick="copyText('uuid-output')" class="btn btn-icon" title="复制">📋</button>
+        </div>
+        <div id="uuid-batch" class="password-batch"></div>
+      </div>
+    </section>
+
+    <!-- Hash 生成器 -->
+    <section class="panel" id="panel-hash">
+      <div class="tool-header">
+        <h2>Hash 生成器</h2>
+      </div>
+      <div class="hash-container">
+        <div class="hash-input-area">
+          <textarea id="hash-input" placeholder="在此输入要哈希的文本..." rows="5" spellcheck="false"></textarea>
+          <div class="hash-algo-row">
+            <label>算法:</label>
+            <div class="hash-algo-btns">
+              <button class="btn active" data-algo="sha256" onclick="setHashAlgo(this)">SHA-256</button>
+              <button class="btn" data-algo="sha1" onclick="setHashAlgo(this)">SHA-1</button>
+              <button class="btn" data-algo="md5" onclick="setHashAlgo(this)">MD5</button>
+            </div>
+          </div>
+          <button onclick="computeHash()" class="btn btn-primary" style="margin-top:0.8rem">计算 Hash</button>
+        </div>
+        <div class="hash-output-area">
+          <div class="hash-result-row">
+            <label>结果 (lowercase)</label>
+            <div class="ts-input-group">
+              <input type="text" id="hash-output-lower" readonly>
+              <button onclick="copyText('hash-output-lower')" class="btn">复制</button>
+            </div>
+          </div>
+          <div class="hash-result-row">
+            <label>结果 (UPPERCASE)</label>
+            <div class="ts-input-group">
+              <input type="text" id="hash-output-upper" readonly>
+              <button onclick="copyText('hash-output-upper')" class="btn">复制</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JWT 解码器 -->
+    <section class="panel" id="panel-jwt">
+      <div class="tool-header">
+        <h2>JWT 解码器</h2>
+        <div class="actions">
+          <button onclick="decodeJWT()" class="btn btn-primary">解码</button>
+          <button onclick="clearJWT()" class="btn btn-ghost">清空</button>
+        </div>
+      </div>
+      <div class="io-grid">
+        <div class="io-col">
+          <label>JWT Token</label>
+          <textarea id="jwt-input" placeholder="在此粘贴 JWT..." spellcheck="false"></textarea>
+        </div>
+        <div class="io-col jwt-decoded">
+          <label>Payload (JSON)</label>
+          <textarea id="jwt-header" readonly placeholder="Header..." spellcheck="false"></textarea>
+          <textarea id="jwt-payload" readonly placeholder="Payload..." spellcheck="false" style="margin-top:0.5rem"></textarea>
+        </div>
+      </div>
+      <p id="jwt-error" class="error-msg"></p>
+    </section>
+
     <!-- OpenClaw 配置生成器 -->
     <section class="panel" id="panel-openclaw">
       <div class="tool-header">
         <h2>OpenClaw 配置生成器</h2>
         <div class="actions">
           <button onclick="generateOpenClawConfig()" class="btn btn-primary">生成配置</button>
-          <button onclick="copyOpenClawConfig()" class="btn">复制 JSON</button>
+          <button onclick="copyText('oc-output')" class="btn">复制 JSON</button>
           <button onclick="downloadOpenClawConfig()" class="btn">下载 openclaw.json</button>
         </div>
       </div>
@@ -168,8 +353,9 @@
               <label for="oc-provider">Provider</label>
               <select id="oc-provider">
                 <option value="openrouter">OpenRouter</option>
-                <option value="google">Google</option>
-                <option value="dashscope">DashScope</option>
+                <option value="dashscope">DashScope (阿里云)</option>
+                <option value="google">Google Gemini</option>
+                <option value="siliconflow">SiliconFlow</option>
                 <option value="custom">自定义</option>
               </select>
             </div>
@@ -182,24 +368,63 @@
               <input type="password" id="oc-api-key" placeholder="sk-...">
             </div>
             <div class="oc-field">
-              <label for="oc-api-base">API Base URL</label>
-              <input type="text" id="oc-api-base" placeholder="留空使用默认值">
+              <label for="oc-api-base">API Base URL（留空使用默认）</label>
+              <input type="text" id="oc-api-base" placeholder="https://openrouter.ai/api/v1">
+            </div>
+          </fieldset>
+
+          <!-- Nextcloud Talk -->
+          <fieldset class="oc-group">
+            <legend>Nextcloud Talk</legend>
+            <div class="oc-toggle-row">
+              <label class="oc-toggle">
+                <input type="checkbox" id="oc-nextcloud-enabled">
+                <span>启用 Nextcloud Talk</span>
+              </label>
+            </div>
+            <div id="oc-nextcloud-fields">
+              <div class="oc-field">
+                <label for="oc-nextcloud-url">Base URL</label>
+                <input type="text" id="oc-nextcloud-url" placeholder="http://127.0.0.1:8080">
+              </div>
+              <div class="oc-field">
+                <label for="oc-nextcloud-secret">Bot Secret</label>
+                <input type="password" id="oc-nextcloud-secret" placeholder="Bot Secret">
+              </div>
+              <div class="oc-field">
+                <label for="oc-nextcloud-user">API 用户</label>
+                <input type="text" id="oc-nextcloud-user" value="admin">
+              </div>
+              <div class="oc-field">
+                <label for="oc-nextcloud-pass">API 密码</label>
+                <input type="password" id="oc-nextcloud-pass" placeholder="应用密码">
+              </div>
+              <div class="oc-field">
+                <label for="oc-nextcloud-room">房间 Token</label>
+                <input type="text" id="oc-nextcloud-room" placeholder="p38vukqg">
+              </div>
+              <div class="oc-field">
+                <label for="oc-nextcloud-webhook">Webhook Public URL</label>
+                <input type="text" id="oc-nextcloud-webhook" placeholder="http://IP:8788/nextcloud-talk-webhook">
+              </div>
             </div>
           </fieldset>
 
           <!-- 网关配置 -->
           <fieldset class="oc-group">
             <legend>网关配置</legend>
-            <div class="oc-field">
-              <label for="oc-port">端口号</label>
-              <input type="number" id="oc-port" value="18789" min="1" max="65535">
-            </div>
-            <div class="oc-field">
-              <label for="oc-mode">模式</label>
-              <select id="oc-mode">
-                <option value="local">local</option>
-                <option value="remote">remote</option>
-              </select>
+            <div class="oc-field-row">
+              <div class="oc-field">
+                <label for="oc-port">端口号</label>
+                <input type="number" id="oc-port" value="18789" min="1" max="65535">
+              </div>
+              <div class="oc-field">
+                <label for="oc-mode">模式</label>
+                <select id="oc-mode">
+                  <option value="local">local</option>
+                  <option value="remote">remote</option>
+                </select>
+              </div>
             </div>
             <div class="oc-field">
               <label for="oc-auth-token">Auth Token</label>
@@ -210,62 +435,27 @@
             </div>
           </fieldset>
 
-          <!-- 渠道配置 -->
-          <fieldset class="oc-group">
-            <legend>渠道配置</legend>
-            <div class="oc-toggle-row">
-              <label class="oc-toggle">
-                <input type="checkbox" id="oc-discord-enabled">
-                <span>Discord</span>
-              </label>
-            </div>
-            <div class="oc-field oc-sub-field" id="oc-discord-fields">
-              <label for="oc-discord-token">Discord Token</label>
-              <input type="password" id="oc-discord-token" placeholder="Bot Token">
-            </div>
-            <div class="oc-toggle-row">
-              <label class="oc-toggle">
-                <input type="checkbox" id="oc-telegram-enabled">
-                <span>Telegram</span>
-              </label>
-            </div>
-            <div class="oc-field oc-sub-field" id="oc-telegram-fields">
-              <label for="oc-telegram-token">Bot Token</label>
-              <input type="password" id="oc-telegram-token" placeholder="123456:ABC-DEF...">
-            </div>
-          </fieldset>
-
           <!-- 工具配置 -->
           <fieldset class="oc-group">
             <legend>工具配置</legend>
             <div class="oc-toggle-row">
               <label class="oc-toggle">
                 <input type="checkbox" id="oc-websearch-enabled" checked>
-                <span>Web Search</span>
+                <span>Web Search (Brave)</span>
               </label>
             </div>
             <div class="oc-field oc-sub-field" id="oc-websearch-fields">
               <label for="oc-brave-key">Brave Search API Key</label>
               <input type="password" id="oc-brave-key" placeholder="BSA...">
             </div>
-            <div class="oc-toggle-row">
-              <label class="oc-toggle">
-                <input type="checkbox" id="oc-webfetch-enabled" checked>
-                <span>Web Fetch</span>
-              </label>
-            </div>
-            <div class="oc-field oc-sub-field" id="oc-webfetch-fields">
-              <label for="oc-webfetch-maxchars">maxChars</label>
-              <input type="number" id="oc-webfetch-maxchars" value="50000" min="1000">
-            </div>
           </fieldset>
         </div>
 
-        <!-- JSON 粘贴 & 输出区域 -->
+        <!-- JSON 输出区域 -->
         <div class="openclaw-output">
           <div class="oc-paste-area">
-            <label>粘贴已有 JSON 直接格式化</label>
-            <textarea id="oc-paste-input" placeholder="在此粘贴 openclaw.json 内容..." spellcheck="false"></textarea>
+            <label>粘贴已有 openclaw.json 反向解析</label>
+            <textarea id="oc-paste-input" placeholder='{"meta":{...},"models":{...}}' spellcheck="false"></textarea>
             <button onclick="parseOpenClawJson()" class="btn">解析并填充表单</button>
           </div>
           <div class="oc-output-area">
@@ -276,6 +466,9 @@
       </div>
     </section>
   </main>
+
+  <!-- Toast 通知 -->
+  <div id="toast" class="toast"></div>
 
   <footer>
     <p>开发者工具箱 · 纯前端实现 · 数据不上传</p>

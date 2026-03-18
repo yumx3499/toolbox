@@ -446,6 +446,116 @@ textarea[readonly] {
   flex-wrap: wrap;
 }
 
+/* Toast */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%) translateY(60px);
+  background: var(--primary);
+  color: #fff;
+  padding: 0.55rem 1.3rem;
+  border-radius: var(--radius);
+  font-size: 0.88rem;
+  pointer-events: none;
+  opacity: 0;
+  transition: all 0.25s ease;
+  z-index: 9999;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+}
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Timestamp panel */
+.ts-container {
+  max-width: 560px;
+}
+.ts-row {
+  margin-bottom: 1rem;
+}
+.ts-row label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 0.3rem;
+}
+.ts-input-group {
+  display: flex;
+  gap: 0.5rem;
+}
+.ts-input-group input {
+  flex: 1;
+  padding: 0.45rem 0.6rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-family: "Fira Code", monospace;
+  font-size: 0.85rem;
+}
+.ts-input-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+.ts-input-group input[readonly] {
+  opacity: 0.85;
+}
+
+/* Hash panel */
+.hash-container {
+  max-width: 640px;
+}
+.hash-input-area textarea {
+  height: 100px;
+  margin-bottom: 0.8rem;
+}
+.hash-algo-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+.hash-algo-row label {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+.hash-algo-btns {
+  display: flex;
+  gap: 0.4rem;
+}
+.hash-algo-btns .btn.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+.hash-output-area {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.hash-result-row label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 0.3rem;
+}
+
+/* JWT panel */
+.jwt-decoded textarea {
+  height: 180px;
+}
+
+/* OpenClaw field row (inline) */
+.oc-field-row {
+  display: flex;
+  gap: 0.8rem;
+}
+.oc-field-row .oc-field {
+  flex: 1;
+}
+
 /* Footer */
 footer {
   text-align: center;
