@@ -440,28 +440,6 @@ function setHashAlgo(btn) {
   currentHashAlgo = btn.dataset.algo;
 }
 
-async function computeHash() {
-  const input = document.getElementById('hash-input').value;
-  if (!input) return;
-  const encoder = new TextEncoder();
-  const data = encoder.encode(input);
-
-  let hashBuffer;
-  try {
-    hashBuffer = await crypto.subtle.digest(currentHashAlgo, data);
-  } catch (e) {
-    // fallback for md5 not in SubtleCrypto
-    document.getElementById('hash-output-lower').value = '❌ 不支持此算法: ' + e.message;
-    document.getElementById('hash-output-upper').value = '';
-    return;
-  }
-
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  document.getElementById('hash-output-lower').value = hashHex;
-  document.getElementById('hash-output-upper').value = hashHex.toUpperCase();
-}
-
 // MD5 fallback using a pure JS implementation
 function md5(string) {
   function md5cycle(x, k) {
@@ -476,16 +454,15 @@ function md5(string) {
   function ii(a,b,c,d,x,s,t){return cmn(c^(b|(~d)),a,b,x,s,t);}
   function add32(a,b){return(a+b)&0xFFFFFFFF;}
   function md5blk(s){var md5blks=[],i;for(i=0;i<64;i+=4){md5blks[i>>2]=s.charCodeAt(i)+(s.charCodeAt(i+1)<<8)+(s.charCodeAt(i+2)<<16)+(s.charCodeAt(i+3)<<24);}return md5blks;}
+  var hex='0123456789abcdef';
   var n=s.length,s=[1732584193,-271733879,-1732584194,271733878],i;
   for(i=64;i<=n;i+=64){md5cycle(s,md5blk(s.substring(i-64,i)));}
   s=md5cycle(s,md5blk(s.substring(i-64,s.length+((17+n)%64))));
   var r='';
   for(i=0;i<4;i++)for(var j=0;j<4;j++)r+=hex.charAt((s[i]>>(j*8+4))&0x0F)+hex.charAt((s[i]>>(j*8))&0x0F);
   return r;
-  var hex='0123456789abcdef';
 }
 
-// Override computeHash to include MD5 fallback
 async function computeHash() {
   const input = document.getElementById('hash-input').value;
   if (!input) return;
